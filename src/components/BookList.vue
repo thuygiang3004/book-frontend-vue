@@ -11,7 +11,6 @@ const props = defineProps({
       <li v-for="book in props.books" :key="book.id">
         {{ book.title }}
       </li>
-<!--      {books.map((book) => <li key={book.id}>{book.title}</li>)}-->
     </ul>
   </div>
 
