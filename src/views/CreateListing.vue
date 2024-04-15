@@ -10,10 +10,10 @@
       <label>Book Name</label>
       <select v-model="listing.bookId">
         <option value="">Select a book</option>
-        <option v-for="book in bookList" :key="book.id" :value="book.id" >
+        <option v-for="book in bookList" :key="book.id" :value="book.id">
           {{ book.title }}
         </option>
-      ))}
+        ))}
       </select>
     </div>
 
@@ -36,6 +36,7 @@
 import {onMounted, ref} from "vue";
 import axios from "axios";
 import {postListing} from "@/API/HttpService.js";
+import {useRouter} from "vue-router";
 
 const bookList = ref(null);
 
@@ -48,6 +49,8 @@ const listing = ref({
 
 const imageInput = ref(null)
 const image = ref(null)
+
+const router = useRouter()
 
 const getBooks = async () => {
   const res = await axios.get('http://127.0.0.1:8000/api/books');
@@ -70,7 +73,12 @@ const handleSubmit = async () => {
   formData.append("price", listing.value.price.toString());
   formData.append("status", "new");
 
-  await postListing(formData)
+  try {
+    await postListing(formData)
+    await router.push({path: '/listings', replace: true})
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 

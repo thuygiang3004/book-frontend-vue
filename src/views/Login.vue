@@ -8,15 +8,23 @@ const input = ref({
   password: ''
 })
 
+const errors = ref([]);
+
 const router = useRouter()
 const handleLoginBtnClick = async () => {
-  const user = await login(input.value)
+  try {
+    const user = await login(input.value)
 
-  localStorage.setItem('userName', user.userName)
-  localStorage.setItem('userEmail', user.userEmail)
-  localStorage.setItem('token', user.token)
+    localStorage.setItem('userName', user.userName)
+    localStorage.setItem('userEmail', user.userEmail)
+    localStorage.setItem('token', user.token)
 
-  await router.push({ path: '/listings', replace: true })
+    await router.push({path: '/listings', replace: true})
+  }catch (e){
+    if(!errors.value.includes(e.data.message)) {
+      errors.value.push(e.data.message)
+    }
+  }
 }
 
 </script>
@@ -34,6 +42,9 @@ const handleLoginBtnClick = async () => {
     <div>
       <button class="bg-blue-500 text-white px-4 py-2" type='submit' @click="handleLoginBtnClick">Log in
       </button>
+    </div>
+    <div v-if="errors.length">
+      <p v-for="(error, index) in errors" :key="index" >{{error}}</p>
     </div>
   </div>
 </template>

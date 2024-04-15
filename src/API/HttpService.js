@@ -26,7 +26,10 @@ export const postListing = async (listingData) => {
 }
 
 export const login = async (user) => {
-    const res = await axios.post('http://127.0.0.1:8000/api/login', user)
-    console.log(res.data.user)
-    return res.data.user
+    try {
+        const res = await axios.post('http://127.0.0.1:8000/api/login', user)
+        return res.data.user
+    } catch (e) {
+        throw e.response;
+    }
 }
