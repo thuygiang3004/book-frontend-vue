@@ -1,8 +1,10 @@
 <template>
   Show a listing
-  <p>{{ listing.title }}</p>
-  <p>{{ listing.price }}</p>
-  <BookList :books="listing.books"/>
+  <div v-if="listing">
+    <p>{{ listing.title }}</p>
+    <p>{{ listing.price }}</p>
+    <BookList :books="listing.books"/>
+  </div>
 
 </template>
 
@@ -17,6 +19,7 @@ const listing = ref(null)
 
 onMounted(async () => {
   const response = await getListingInfo(route.params.id)
+  console.log(response)
   listing.value = response
 })
 
