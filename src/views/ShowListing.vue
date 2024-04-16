@@ -1,9 +1,14 @@
 <template>
-  Show a listing
+  <h1 class="text-2xl">Show a listing</h1>
   <div v-if="listing">
-    <p>{{ listing.title }}</p>
-    <p>{{ listing.price }}</p>
+    <p>Title: {{ listing.title }}</p>
+    <p>Price: {{ listing.price }}</p>
     <BookList :books="listing.books"/>
+    <div>
+      <p>Comments:</p>
+      <p v-for="comment in listing.comments" :key="comment.id" class="m-2 text-xs border border-cyan-950">
+        {{ comment.content }}</p>
+    </div>
   </div>
 
 </template>
