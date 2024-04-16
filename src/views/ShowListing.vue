@@ -6,8 +6,10 @@
     <BookList :books="listing.books"/>
     <div>
       <p>Comments:</p>
-      <p v-for="comment in listing.comments" :key="comment.id" class="m-2 text-xs border border-cyan-950">
-        {{ comment.content }}</p>
+      <div v-for="comment in listing.comments" :key="comment.id" class="m-2 text-xs border border-cyan-950">
+        <p>{{ comment.content }}</p>
+        <p class="italic text-right">By {{ getShortName(comment.user.name) }}</p>
+      </div>
     </div>
   </div>
 
@@ -28,4 +30,5 @@ onMounted(async () => {
   listing.value = response
 })
 
+const getShortName = (name) => name.split(' ').map(word => word.substring(0, 1)).join('')
 </script>
