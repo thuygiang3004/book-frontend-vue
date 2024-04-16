@@ -10,6 +10,7 @@
         <p>{{ comment.content }}</p>
         <p class="italic text-right">By {{ getShortName(comment.user.name) }}</p>
       </div>
+      <CommentBox/>
     </div>
   </div>
 
@@ -20,6 +21,7 @@ import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 import {getListingInfo} from "@/API/HttpService.js";
 import BookList from "@/components/BookList.vue";
+import CommentBox from "@/components/CommentBox.vue";
 
 const route = useRoute()
 const listing = ref(null)

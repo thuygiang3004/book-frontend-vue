@@ -37,3 +37,7 @@ export const login = async (user) => {
         throw e.response;
     }
 }
+
+export const createComment = async (comment) => {
+    console.log(comment)
+}
