@@ -1,6 +1,6 @@
 <script setup>
 const props = defineProps({
-  books: []
+  books: {type: Array}
 })
 </script>
 
