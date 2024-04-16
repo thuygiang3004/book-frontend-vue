@@ -34,8 +34,7 @@
 <script setup>
 
 import {onMounted, ref} from "vue";
-import axios from "axios";
-import {postListing} from "@/API/HttpService.js";
+import {getBooks, postListing} from "@/API/HttpService.js";
 import {useRouter} from "vue-router";
 
 const bookList = ref(null);
@@ -51,11 +50,6 @@ const imageInput = ref(null)
 const image = ref(null)
 
 const router = useRouter()
-
-const getBooks = async () => {
-  const res = await axios.get('http://127.0.0.1:8000/api/books');
-  return res.data
-}
 
 onMounted(async () => {
   bookList.value = await getBooks();

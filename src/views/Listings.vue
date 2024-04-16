@@ -1,8 +1,8 @@
 <script setup>
 import {onMounted, ref} from "vue";
-import axios from "axios";
 import BookList from "@/components/BookList.vue";
 import Pagination from "@/components/Pagination.vue";
+import {getListings} from "@/API/HttpService.js";
 
 const listings = ref(null)
 const meta = ref(null)
@@ -15,10 +15,10 @@ onMounted(async () => {
   meta.value = listingsResponse.meta
 })
 
-const getListings = async (page) => {
-  const res = await axios.get(`http://127.0.0.1:8000/api/listings?page=${page}`);
-  return res.data
-}
+// const getListings = async (page) => {
+//   const res = await axios.get(`http://127.0.0.1:8000/api/listings?page=${page}`);
+//   return res.data
+// }
 
 const handlePageChanged = async (index) => {
   currentPage.value = index;
