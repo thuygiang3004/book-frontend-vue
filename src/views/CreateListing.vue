@@ -1,4 +1,5 @@
 <template>
+  <Header/>
   <h1>Create a Listing</h1>
   <form @submit.prevent="handleSubmit" encType="multipart/form-data" class="bg-cyan-200 p-4 space-y-4">
     <div>
@@ -38,6 +39,7 @@ import {getBooks, postListing} from "@/API/HttpService.js";
 import {useRouter} from "vue-router";
 import {storeToRefs} from "pinia";
 import {useAuthStore} from "@/store/auth.store.js";
+import Header from "@/components/Header.vue";
 
 const bookList = ref(null);
 const authStore = useAuthStore()

@@ -24,8 +24,15 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
+    const logout = async () => {
+        localStorage.removeItem('userName')
+        localStorage.removeItem('userEmail')
+        localStorage.removeItem('token')
+
+        await router.push({path: '/login', replace: true})
+    }
+
     return {
-        isAuthenticated,
-        login
+        isAuthenticated, login, logout
     }
 })
