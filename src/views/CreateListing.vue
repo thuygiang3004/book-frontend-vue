@@ -61,7 +61,7 @@ onMounted(async () => {
 
   console.log(isAuthenticated.value)
   if (!isAuthenticated.value) {
-    router.push({path: '/login', replace: true})
+    await router.push({path: '/login', replace: true})
   }
   bookList.value = await getBooks();
 })
