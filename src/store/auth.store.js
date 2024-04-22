@@ -7,6 +7,7 @@ export const useAuthStore = defineStore('auth', () => {
     const router = useRouter()
 
     const isAuthenticated = ref(!!localStorage.getItem('token'))
+    const userName = ref(localStorage.getItem('userName'))
     const login = async (user) => {
         try {
 
@@ -33,6 +34,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     return {
-        isAuthenticated, login, logout
+        isAuthenticated, userName, login, logout
     }
 })
