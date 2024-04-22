@@ -4,11 +4,9 @@ import {useRouter} from "vue-router";
 import {ref} from "vue";
 
 export const useAuthStore = defineStore('auth', () => {
-    const getAuthToken = () => localStorage.getItem('token') || '';
-
     const router = useRouter()
 
-    const isAuthenticated = ref(!!getAuthToken())
+    const isAuthenticated = ref(!!localStorage.getItem('token'))
     const login = async (user) => {
         try {
 
