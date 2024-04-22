@@ -42,7 +42,6 @@ import {useAuthStore} from "@/store/auth.store.js";
 const bookList = ref(null);
 const authStore = useAuthStore()
 const {isAuthenticated} = storeToRefs(authStore)
-console.log(isAuthenticated.value)
 
 const listing = ref({
   title: '',
@@ -57,6 +56,11 @@ const image = ref(null)
 const router = useRouter()
 
 onMounted(async () => {
+
+  console.log(isAuthenticated.value)
+  if (!isAuthenticated.value) {
+    router.push({path: '/login', replace: true})
+  }
   bookList.value = await getBooks();
 })
 
