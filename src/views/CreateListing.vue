@@ -36,8 +36,13 @@
 import {onMounted, ref} from "vue";
 import {getBooks, postListing} from "@/API/HttpService.js";
 import {useRouter} from "vue-router";
+import {storeToRefs} from "pinia";
+import {useAuthStore} from "@/store/auth.store.js";
 
 const bookList = ref(null);
+const authStore = useAuthStore()
+const {isAuthenticated} = storeToRefs(authStore)
+console.log(isAuthenticated.value)
 
 const listing = ref({
   title: '',
