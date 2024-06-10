@@ -6,12 +6,13 @@ import LanguageCheckboxes from "@/components/LanguageCheckboxes.vue";
 const mocks = vi.hoisted(() => {
     return {
         replace: vi.fn(),
-        query: {}
+        routeName: '',
+        query: {},
+        useAnalytics: vi.fn()
     }
 })
 
-vi.mock('vue-router', async () => ({
-    ...await vi.importActual('vue-router'),
+vi.mock('vue-router', () => ({
     createRouter: () => {
     },
     useRoute() {
@@ -53,8 +54,10 @@ describe('LanguageCheckboxes', () => {
         const frenchCheckbox = wrapper.findAll('input[type="checkbox"]')[1]
 
         await englishCheckbox.setChecked()
-        await frenchCheckbox.setChecked()
         expect(englishCheckbox.element.checked).toBeTruthy()
+        expect(mocks.replace).toHaveBeenCalledWith({query: {languages: ['0']}})
+
+        await frenchCheckbox.setChecked()
         expect(frenchCheckbox.element.checked).toBeTruthy()
 
         expect(mocks.replace).toHaveBeenCalledWith({query: {languages: ['0', '1']}})

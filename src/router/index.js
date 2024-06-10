@@ -4,6 +4,7 @@ import Listings from "@/views/Listings.vue";
 import Login from "@/views/Login.vue";
 import CreateListing from "@/views/CreateListing.vue";
 import ShowListing from "@/views/ShowListing.vue";
+import Chart from "@/views/Chart.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
+    },
+      {
+          path: '/chart',
+          name: 'chart',
+          component: Chart
     }
   ]
 })

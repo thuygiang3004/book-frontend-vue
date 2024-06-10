@@ -15,8 +15,7 @@ const route = useRoute();
 // console.log(queryParams)
 
 watch(selectedLanguages, (newValue) => {
-  console.log(selectedLanguages.value)
-  router.replace({query: {...route.query, languages: selectedLanguages.value.map(value => value.toString())}})
+  router.replace({query: {...route.query, languages: newValue.map(value => value.toString())}})
 })
 
 </script>
