@@ -37,13 +37,9 @@
 import {onMounted, ref} from "vue";
 import {getBooks, postListing} from "@/API/HttpService.js";
 import {useRouter} from "vue-router";
-import {storeToRefs} from "pinia";
-import {useAuthStore} from "@/store/auth.store.js";
 import Header from "@/components/Header.vue";
 
 const bookList = ref(null);
-const authStore = useAuthStore()
-const {isAuthenticated} = storeToRefs(authStore)
 
 const listing = ref({
   title: '',
@@ -58,25 +54,20 @@ const image = ref(null)
 const router = useRouter()
 
 onMounted(async () => {
-
-  console.log(isAuthenticated.value)
-  if (!isAuthenticated.value) {
-    await router.push({path: '/login', replace: true})
-  }
-  bookList.value = await getBooks();
+  bookList.value = (await getBooks()).data
 })
 
 const handleFileUpload = () => {
-  image.value = imageInput.value?.files[0];
+  image.value = imageInput.value?.files[0]
 }
 
 const formData = new FormData()
 const handleSubmit = async () => {
-  if (image.value) formData.append("image", image.value);
-  formData.append("title", listing.value.title);
-  formData.append("books[]", listing.value.bookId.toString());
-  formData.append("price", listing.value.price.toString());
-  formData.append("status", "new");
+  if (image.value) formData.append("image", image.value)
+  formData.append("title", listing.value.title)
+  formData.append("books[]", listing.value.bookId.toString())
+  formData.append("price", listing.value.price.toString())
+  formData.append("status", "new")
 
   try {
     await postListing(formData)

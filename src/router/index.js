@@ -4,7 +4,7 @@ import Listings from "@/views/Listings.vue";
 import Login from "@/views/Login.vue";
 import CreateListing from "@/views/CreateListing.vue";
 import ShowListing from "@/views/ShowListing.vue";
-import Chart from "@/views/Chart.vue";
+import {useAuthStore} from "@/store/auth.store.js";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,7 +22,10 @@ const router = createRouter({
     {
       path: '/listings/create',
       name: 'create-listings',
-      component: CreateListing
+      component: CreateListing,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/listings/:id',
@@ -33,13 +36,15 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
-    },
-      {
-          path: '/chart',
-          name: 'chart',
-          component: Chart
     }
   ]
+})
+
+router.beforeEach((to) => {
+  const {isAuthenticated} = useAuthStore()
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return '/login'
+  }
 })
 
 export default router

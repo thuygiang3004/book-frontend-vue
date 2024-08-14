@@ -33,7 +33,5 @@ export const useAuthStore = defineStore('auth', () => {
         await router.push({path: '/login', replace: true})
     }
 
-    return {
-        isAuthenticated, userName, login, logout
-    }
+    return {isAuthenticated, userName, login, logout}
 })
