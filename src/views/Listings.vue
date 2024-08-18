@@ -43,6 +43,7 @@ const languages = [
     <div class="grid grid-cols-2 m-4 gap-4">
       <div v-for="listing in listings" :key="listing.id" class="border-blue-500 border-2 my-3 p-2">
         <p>Listing title: {{ listing.title }}</p>
+        <!--        TODO: Show images-->
         <img v-if="!!listing.images" :src="`http://localhost:8000/storage/${listing.images}`" alt="image"
              class="max-w-40"/>
         <BookList :books="listing.books"/>
