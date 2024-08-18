@@ -32,10 +32,10 @@
   </form>
 </template>
 
-<script setup>
+<script lang="js" setup>
 
 import {onMounted, ref} from "vue";
-import {getBooks, postListing} from "@/API/HttpService.js";
+import {getBooks, postListing} from "@/API/HttpService.ts";
 import {useRouter} from "vue-router";
 import Header from "@/components/Header.vue";
 
@@ -60,7 +60,6 @@ onMounted(async () => {
 const handleFileUpload = () => {
   image.value = imageInput.value?.files[0]
 }
-
 const formData = new FormData()
 const handleSubmit = async () => {
   if (image.value) formData.append("image", image.value)

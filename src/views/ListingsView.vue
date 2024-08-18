@@ -1,24 +1,40 @@
-<script setup>
+<script lang="ts" setup>
 import {onMounted, ref} from "vue";
 import BookList from "@/components/BookList.vue";
 import Pagination from "@/components/Pagination.vue";
-import {getListings} from "@/API/HttpService.js";
 import LanguageCheckboxes from "@/components/LanguageCheckboxes.vue";
+import {getListings} from "@/API/HttpService";
 
-const listings = ref(null)
-const meta = ref(null)
+type Book = {
+  id: number,
+  title: string,
+  author: string,
+}
+type Listing = {
+  id: number,
+  title: string,
+  images: string,
+  books: Array<Book>,
+  price: number
+}
 
-const currentPage = ref(null);
+type Meta = {
+  links: string[]
+}
+const listings = ref<Listing[] | null>(null)
+const meta = ref<Meta | null>(null)
+
+const currentPage = ref<number | null>(null);
 
 onMounted(async () => {
-  const listingsResponse = await getListings(currentPage.value)
+  const listingsResponse = await getListings(currentPage.value ?? 0)
   listings.value = listingsResponse.data;
   meta.value = listingsResponse.meta
 })
 
-const handlePageChanged = async (index) => {
+const handlePageChanged = async (index: number) => {
   currentPage.value = index;
-  const listingsResponse = await getListings(currentPage.value)
+  const listingsResponse = await getListings(currentPage.value ?? 0)
   listings.value = listingsResponse.data;
   meta.value = listingsResponse.meta
 }
@@ -26,12 +42,12 @@ const handlePageChanged = async (index) => {
 const languages = [
   {
     id: 0,
-    name: 'English'
+    name: 'English',
   },
   {
     id: 1,
-    name: 'French'
-  }
+    name: 'French',
+  },
 ]
 
 </script>
@@ -50,7 +66,7 @@ const languages = [
         <p>Price: {{ listing.price }}</p>
       </div>
     </div>
-    <Pagination :links="meta.links" @change-page="handlePageChanged"/>
+    <Pagination :links="meta?.links ?? []" @change-page="handlePageChanged"/>
   </div>
 
 </template>

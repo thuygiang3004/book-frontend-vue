@@ -1,10 +1,16 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import {createRouter, createWebHistory, RouteLocationNormalized} from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import Listings from "@/views/Listings.vue";
+import Listings from "@/views/ListingsView.vue";
 import Login from "@/views/Login.vue";
 import CreateListing from "@/views/CreateListing.vue";
+import {useAuthStore} from "../store/auth.store";
 import ShowListing from "@/views/ShowListing.vue";
-import {useAuthStore} from "@/store/auth.store.js";
+
+interface ToRoute extends RouteLocationNormalized {
+  meta?: {
+    requiresAuth: boolean
+  }
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,9 +46,9 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to) => {
+router.beforeEach((to: ToRoute) => {
   const {isAuthenticated} = useAuthStore()
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (to.meta?.requiresAuth && !isAuthenticated) {
     return '/login'
   }
 })

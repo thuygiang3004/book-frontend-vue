@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from "vue";
-import {createComment} from "@/API/HttpService.js";
+import {createComment} from "@/API/HttpService.ts";
 
 const comment = ref('')
 

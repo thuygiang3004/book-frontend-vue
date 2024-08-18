@@ -19,7 +19,7 @@
 <script setup>
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
-import {getListingInfo} from "@/API/HttpService.js";
+import {getListingInfo} from "@/API/HttpService.ts";
 import BookList from "@/components/BookList.vue";
 import CommentBox from "@/components/CommentBox.vue";
 
