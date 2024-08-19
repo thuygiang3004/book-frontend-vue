@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {getBooks, postListing} from "@/API/HttpService.ts";
 import {useRouter} from "vue-router";
 import Header from "@/components/Header.vue";
-import MultiSelect, {type Option} from "@/components/common/MultiSelect.vue";
+import MultiSelect from "@/components/common/MultiSelect.vue";
 import {Book} from "@/views/ListingsView.vue";
 
 const bookList = ref<Book[] | null>(null);
@@ -13,13 +13,13 @@ type ListingInput = {
   title: string,
   price: number | null,
   image: string | null,
-  bookId: string
+  bookId: number | null
 }
 const listing = ref<ListingInput>({
   title: '',
   price: null,
   image: null,
-  bookId: '',
+  bookId: null,
 })
 
 const imageInput = ref(null)
@@ -47,7 +47,7 @@ const handleFileUpload = () => {
 const formData = new FormData()
 const handleSubmit = async () => {
 
-  if (!listing.value || !listing.value.title || !listing.value.price) {
+  if (!listing.value || !listing.value.title || !listing.value.price || !listing.value.bookId) {
     console.log('Required fields missing')
     return
   }
@@ -69,6 +69,12 @@ const handleSubmit = async () => {
 }
 
 
+const selectedBookId = ref<number | null>(null)
+watch(() => selectedBookId, () => {
+  console.log(selectedBookId)
+})
+
+
 </script>
 
 <template>
@@ -81,17 +87,7 @@ const handleSubmit = async () => {
     </div>
 
     <div>
-      <label>Book Name</label>
-      <select v-model="listing.bookId">
-        <option value="">Select a book</option>
-        <option v-for="book in bookList" :key="book.id" :value="book.id">
-          {{ book.title }}
-        </option>
-        ))}
-      </select>
-
-
-      <MultiSelect v-if="bookOptions" :options="bookOptions"/>
+      <MultiSelect v-if="bookOptions" v-model="selectedBookId" :options="bookOptions"/>
     </div>
 
     <div>
@@ -106,4 +102,5 @@ const handleSubmit = async () => {
 
     <button type="submit">Submit</button>
   </form>
+  <div>{{ selectedBookId }}</div>
 </template>

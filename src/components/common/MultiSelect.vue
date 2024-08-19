@@ -8,16 +8,21 @@ export type Option = {
 }
 type MultiSelectProps = {
   options: Array<Option>,
-  selected?: Option
+  modelValue: number | null
 }
 const props = defineProps<MultiSelectProps>()
 
-const selectedOption = ref(props.selected ?? null)
+const emit = defineEmits(['update:modelValue'])
+
+const selectedOption = ref(props.options.find(option => option.id === props.modelValue) ?? null)
 
 const showBooks = ref(false)
 const setValue = (option) => {
   selectedOption.value = option
+  emit('update:modelValue', option)
 }
+
+// TODO: Close dropdown when click outside
 
 </script>
 
