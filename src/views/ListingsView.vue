@@ -5,7 +5,7 @@ import Pagination from "@/components/Pagination.vue";
 import LanguageCheckboxes from "@/components/LanguageCheckboxes.vue";
 import {getListings} from "@/API/HttpService";
 
-type Book = {
+export type Book = {
   id: number,
   title: string,
   author: string,

@@ -4,9 +4,10 @@ import {computed, onMounted, ref} from "vue";
 import {getBooks, postListing} from "@/API/HttpService.ts";
 import {useRouter} from "vue-router";
 import Header from "@/components/Header.vue";
-import MultiSelect, {Option} from "@/components/common/MultiSelect.vue";
+import MultiSelect, {type Option} from "@/components/common/MultiSelect.vue";
+import {Book} from "@/views/ListingsView.vue";
 
-const bookList = ref<>(null);
+const bookList = ref<Book[] | null>(null);
 
 type ListingInput = {
   title: string,
@@ -27,16 +28,16 @@ const image = ref<Blob | null>(null)
 const router = useRouter()
 
 onMounted(async () => {
-  const response = (await getBooks()).data;
-  bookList.value = response
-
-
+  bookList.value = (await getBooks()).data as Book []
 })
 
 const bookOptions = computed(() => {
-  return bookList.value.map((book) => ({
+  if (!bookList.value) {
+    return []
+  }
+  return bookList.value?.map((book) => ({
     id: book.id,
-    name: book.name,
+    name: book.title,
   }))
 })
 
