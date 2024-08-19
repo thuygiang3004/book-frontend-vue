@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {getBooks, postListing} from "@/API/HttpService.ts";
 import {useRouter} from "vue-router";
 import Header from "@/components/Header.vue";
+import MultiSelect, {Option} from "@/components/common/MultiSelect.vue";
 
-const bookList = ref(null);
+const bookList = ref<>(null);
 
 type ListingInput = {
   title: string,
@@ -26,7 +27,17 @@ const image = ref<Blob | null>(null)
 const router = useRouter()
 
 onMounted(async () => {
-  bookList.value = (await getBooks()).data
+  const response = (await getBooks()).data;
+  bookList.value = response
+
+
+})
+
+const bookOptions = computed(() => {
+  return bookList.value.map((book) => ({
+    id: book.id,
+    name: book.name,
+  }))
 })
 
 const handleFileUpload = () => {
@@ -45,7 +56,7 @@ const handleSubmit = async () => {
   formData.append("status", "new")
 
   if (image.value) {
-    formData.append("image", image.value)
+    formData.append("image", image.value as Blob)
   }
 
   try {
@@ -77,6 +88,9 @@ const handleSubmit = async () => {
         </option>
         ))}
       </select>
+
+
+      <MultiSelect v-if="bookOptions" :options="bookOptions"/>
     </div>
 
     <div>
