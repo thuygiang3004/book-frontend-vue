@@ -10,7 +10,7 @@ type Book = {
   title: string,
   author: string,
 }
-type Listing = {
+export type Listing = {
   id: number,
   title: string,
   images: string,

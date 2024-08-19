@@ -1,7 +1,68 @@
+<script lang="ts" setup>
+
+import {onMounted, ref} from "vue";
+import {getBooks, postListing} from "@/API/HttpService.ts";
+import {useRouter} from "vue-router";
+import Header from "@/components/Header.vue";
+
+const bookList = ref(null);
+
+type ListingInput = {
+  title: string,
+  price: number | null,
+  image: string | null,
+  bookId: string
+}
+const listing = ref<ListingInput>({
+  title: '',
+  price: null,
+  image: null,
+  bookId: '',
+})
+
+const imageInput = ref(null)
+const image = ref<Blob | null>(null)
+
+const router = useRouter()
+
+onMounted(async () => {
+  bookList.value = (await getBooks()).data
+})
+
+const handleFileUpload = () => {
+  image.value = imageInput.value?.files[0]
+}
+const formData = new FormData()
+const handleSubmit = async () => {
+
+  if (!listing.value || !listing.value.title || !listing.value.price) {
+    console.log('Required fields missing')
+    return
+  }
+  formData.append("title", listing.value.title)
+  formData.append("books[]", listing.value.bookId.toString())
+  formData.append("price", listing.value.price.toString())
+  formData.append("status", "new")
+
+  if (image.value) {
+    formData.append("image", image.value)
+  }
+
+  try {
+    await postListing(formData)
+    await router.push({path: '/listings', replace: true})
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+
+</script>
+
 <template>
   <Header/>
   <h1>Create a Listing</h1>
-  <form @submit.prevent="handleSubmit" encType="multipart/form-data" class="bg-cyan-200 p-4 space-y-4">
+  <form class="bg-cyan-200 p-4 space-y-4" encType="multipart/form-data" @submit.prevent="handleSubmit">
     <div>
       <label>Title</label>
       <input v-model="listing.title"/>
@@ -20,61 +81,14 @@
 
     <div>
       <label>Price</label>
-      <input v-model="listing.price" type="number" step="0.01"/>
+      <input v-model="listing.price" step="0.01" type="number"/>
     </div>
 
     <div>
       <label>Image</label>
-      <input ref="imageInput" @change="handleFileUpload" type="file" accept="image/*"/>
+      <input ref="imageInput" accept="image/*" type="file" @change="handleFileUpload"/>
     </div>
 
     <button type="submit">Submit</button>
   </form>
 </template>
-
-<script lang="js" setup>
-
-import {onMounted, ref} from "vue";
-import {getBooks, postListing} from "@/API/HttpService.ts";
-import {useRouter} from "vue-router";
-import Header from "@/components/Header.vue";
-
-const bookList = ref(null);
-
-const listing = ref({
-  title: '',
-  price: null,
-  image: null,
-  bookId: ''
-})
-
-const imageInput = ref(null)
-const image = ref(null)
-
-const router = useRouter()
-
-onMounted(async () => {
-  bookList.value = (await getBooks()).data
-})
-
-const handleFileUpload = () => {
-  image.value = imageInput.value?.files[0]
-}
-const formData = new FormData()
-const handleSubmit = async () => {
-  if (image.value) formData.append("image", image.value)
-  formData.append("title", listing.value.title)
-  formData.append("books[]", listing.value.bookId.toString())
-  formData.append("price", listing.value.price.toString())
-  formData.append("status", "new")
-
-  try {
-    await postListing(formData)
-    await router.push({path: '/listings', replace: true})
-  } catch (e) {
-    console.log(e)
-  }
-}
-
-
-</script>
