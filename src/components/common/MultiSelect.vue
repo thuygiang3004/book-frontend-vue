@@ -47,10 +47,12 @@ const removeOption = (option: Option) => {
 
 onMounted(() => {
   window.addEventListener('click', closeDropdown)
+  // window.addEventListener('focusin', closeDropdown)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('click', closeDropdown)
+  // window.addEventListener('focusin', closeDropdown)
 })
 
 // TODO: Remove all selected options
@@ -70,7 +72,7 @@ onBeforeUnmount(() => {
                @click="removeOption(selectedOption)">x
           </div>
         </div>
-        <input v-model="inputValue" class="border-0 focus:outline-none"/>
+        <input v-model="inputValue" class="border-0 focus:outline-none" @focus="showDropdown = true"/>
       </div>
 
       <div v-for="option in filteredOptions"
