@@ -81,21 +81,22 @@ watch(() => selectedBookId, () => {
   <Header/>
   <h1>Create a Listing</h1>
   <form class="bg-cyan-200 p-4 space-y-4" encType="multipart/form-data" @submit.prevent="handleSubmit">
-    <div>
+    <div class="flex gap-2">
       <label>Title</label>
       <input v-model="listing.title"/>
     </div>
 
-    <div>
+    <div class="flex gap-2">
+      <p>Books</p>
       <MultiSelect v-if="bookOptions" v-model="selectedBookId" :options="bookOptions"/>
     </div>
 
-    <div>
+    <div class="flex gap-2">
       <label>Price</label>
       <input v-model="listing.price" step="0.01" type="number"/>
     </div>
 
-    <div>
+    <div class="flex gap-2">
       <label>Image</label>
       <input ref="imageInput" accept="image/*" type="file" @change="handleFileUpload"/>
     </div>
