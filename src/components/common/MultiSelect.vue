@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 
 export type Option = {
   id: number,
@@ -16,12 +16,18 @@ const emit = defineEmits(['update:modelValue'])
 
 const multiSelect = ref<HTMLElement | null>(null)
 
+const inputValue = ref<string | null>(null)
 const selectedOptions = ref(props.options.filter(option => props.modelValue?.includes(option.id)) ?? [])
 
 const showDropdown = ref(false)
+
+const filteredOptions = computed(() => {
+  return props.options.filter(item => item.name.includes(inputValue.value ?? ''))
+})
 const setValue = (option) => {
   if (!selectedOptions.value.includes(option)) {
     selectedOptions.value.push(option)
+    inputValue.value = null
     emit('update:modelValue', selectedOptions.value)
   }
 }
@@ -51,11 +57,9 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="multiSelect" class="z-10" @click="showDropdown = !showDropdown">
-    <div class="absolute bg-white px-2 min-w-52 w-max rounded-sm">
+    <div class="absolute bg-white px-2 min-w-80 w-max rounded-sm">
       <div class="flex gap-2">
-        <div v-if="!selectedOptions.length">Please select books</div>
         <div v-for="selectedOption in selectedOptions"
-             v-else
              :key="selectedOption.id"
              class="bg-gray-200 pl-2 my-1 flex gap-2 items-center justify-between rounded-sm"
         >
@@ -64,9 +68,10 @@ onBeforeUnmount(() => {
                @click="removeOption(selectedOption)">x
           </div>
         </div>
+        <input v-model="inputValue" class="border-0 focus:outline-none"/>
       </div>
 
-      <div v-for="option in props.options"
+      <div v-for="option in filteredOptions"
            :key="option.id"
            :class="showDropdown? 'block' : 'hidden'"
            @click="setValue(option)">
