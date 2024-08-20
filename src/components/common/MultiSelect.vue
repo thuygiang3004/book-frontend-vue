@@ -53,6 +53,8 @@ onBeforeUnmount(() => {
   window.removeEventListener('click', closeDropdown)
 })
 
+// TODO: Remove all selected options
+
 </script>
 
 <template>

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {getBooks, postListing} from "@/API/HttpService.ts";
 import {useRouter} from "vue-router";
 import Header from "@/components/Header.vue";
-import MultiSelect from "@/components/common/MultiSelect.vue";
+import MultiSelect, {Option} from "@/components/common/MultiSelect.vue";
 import {Book} from "@/views/ListingsView.vue";
 
 const bookList = ref<Book[] | null>(null);
@@ -13,13 +13,11 @@ type ListingInput = {
   title: string,
   price: number | null,
   image: string | null,
-  bookId: number | null
 }
 const listing = ref<ListingInput>({
   title: '',
   price: null,
   image: null,
-  bookId: null,
 })
 
 const imageInput = ref(null)
@@ -41,18 +39,22 @@ const bookOptions = computed(() => {
   }))
 })
 
+const selectedBooks = ref<Array<Option> | null>(null)
+
 const handleFileUpload = () => {
   image.value = imageInput.value?.files[0]
 }
 const formData = new FormData()
 const handleSubmit = async () => {
 
-  if (!listing.value || !listing.value.title || !listing.value.price || !listing.value.bookId) {
+  if (!listing.value || !listing.value.title || !listing.value.price) {
     console.log('Required fields missing')
     return
   }
   formData.append("title", listing.value.title)
-  formData.append("books[]", listing.value.bookId.toString())
+  selectedBooks.value?.forEach((option) => {
+    formData.append("books[]", option.id.toString())
+  })
   formData.append("price", listing.value.price.toString())
   formData.append("status", "new")
 
@@ -68,13 +70,6 @@ const handleSubmit = async () => {
   }
 }
 
-
-const selectedBookId = ref<number | null>(null)
-watch(() => selectedBookId, () => {
-  console.log(selectedBookId)
-})
-
-
 </script>
 
 <template>
@@ -88,7 +83,7 @@ watch(() => selectedBookId, () => {
 
     <div class="flex gap-2">
       <p>Books</p>
-      <MultiSelect v-if="bookOptions" v-model="selectedBookId" :options="bookOptions"/>
+      <MultiSelect v-if="bookOptions" v-model="selectedBooks" :options="bookOptions"/>
     </div>
 
     <div class="flex gap-2">
@@ -103,5 +98,5 @@ watch(() => selectedBookId, () => {
 
     <button type="submit">Submit</button>
   </form>
-  <div>{{ selectedBookId }}</div>
+  <div>{{ selectedBooks }}</div>
 </template>
