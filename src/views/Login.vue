@@ -1,8 +1,12 @@
-<script setup>
+<script lang="ts" setup>
 import {ref} from "vue";
 import {useAuthStore} from "@/store/auth.store.ts";
 
-const input = ref({
+type UserInput = {
+  email: string
+  password: string
+}
+const input = ref<UserInput>({
   email: '',
   password: ''
 })

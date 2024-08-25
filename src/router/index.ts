@@ -7,8 +7,8 @@ import {useAuthStore} from "../store/auth.store";
 import ShowListing from "@/views/ShowListing.vue";
 
 interface ToRoute extends RouteLocationNormalized {
-  meta?: {
-    requiresAuth: boolean
+  meta: {
+    requiresAuth?: boolean
   }
 }
 

@@ -1,14 +1,20 @@
 import {defineStore} from "pinia";
 import axios from "axios";
 import {useRouter} from "vue-router";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 
+export type User = {
+    userName: string,
+    userEmail: string,
+    token: string
+}
 export const useAuthStore = defineStore('auth', () => {
     const router = useRouter()
 
     const isAuthenticated = ref(!!localStorage.getItem('token'))
-    const userName = ref(localStorage.getItem('userName'))
-    const login = async (user) => {
+    const userName = computed(() => localStorage.getItem('userName'))
+
+    const login = async (user: User) => {
         try {
 
             const res = await axios.post('http://127.0.0.1:8000/api/login', user)
@@ -20,7 +26,7 @@ export const useAuthStore = defineStore('auth', () => {
             isAuthenticated.value = true
             await router.push({path: '/listings/create', replace: true})
 
-        } catch (e) {
+        } catch (e: any) {
             throw e.response;
         }
     }
