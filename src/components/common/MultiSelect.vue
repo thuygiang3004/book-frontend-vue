@@ -47,20 +47,21 @@ const removeOption = (option: Option) => {
 
 onMounted(() => {
   window.addEventListener('click', closeDropdown)
-  // window.addEventListener('focusin', closeDropdown)
+  window.addEventListener('focusin', closeDropdown)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('click', closeDropdown)
-  // window.addEventListener('focusin', closeDropdown)
+  window.addEventListener('focusin', closeDropdown)
 })
 
 // TODO: Remove all selected options
+// TODO: Dont show selected books in the dropdown options
 
 </script>
 
 <template>
-  <div ref="multiSelect" class="z-10" @click="showDropdown = !showDropdown">
+  <div ref="multiSelect" class="z-10">
     <div class="absolute bg-white px-2 min-w-80 w-max rounded-sm">
       <div class="flex gap-2">
         <div v-for="selectedOption in selectedOptions"
@@ -72,7 +73,7 @@ onBeforeUnmount(() => {
                @click="removeOption(selectedOption)">x
           </div>
         </div>
-        <input v-model="inputValue" class="border-0 focus:outline-none" @focus="showDropdown = true"/>
+        <input v-model="inputValue" class="border-0 focus:outline-none" @focus.prevent="showDropdown = true"/>
       </div>
 
       <div v-for="option in filteredOptions"
