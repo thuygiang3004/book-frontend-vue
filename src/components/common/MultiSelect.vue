@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 
-import {computed, onBeforeUnmount, onMounted, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
+import DropdownIcon from "@/components/common/icon/DropdownIcon.vue";
 
 export type Option = {
   id: number,
@@ -22,13 +23,12 @@ const selectedOptions = ref(props.options.filter(option => props.modelValue?.inc
 const showDropdown = ref(false)
 
 const filteredOptions = computed(() => {
-  return props.options.filter(item => item.name.includes(inputValue.value ?? ''))
+  return props.options.filter(option => option.name.includes(inputValue?.value ?? '') && !selectedOptions.value.find(selectedOption => selectedOption.name === option.name))
 })
 const setValue = (option) => {
   if (!selectedOptions.value.includes(option)) {
     selectedOptions.value.push(option)
     inputValue.value = null
-    emit('update:modelValue', selectedOptions.value)
   }
 }
 
@@ -41,9 +41,16 @@ const closeDropdown = (element) => {
 const removeOption = (option: Option) => {
   if (selectedOptions.value.includes(option)) {
     selectedOptions.value?.splice(selectedOptions.value.findIndex((item) => item.id === option.id), 1)
-    emit('update:modelValue', selectedOptions.value)
   }
 }
+
+const removeAll = () => {
+  selectedOptions.value = []
+}
+
+watch(() => selectedOptions.value, () => {
+  emit('update:modelValue', selectedOptions.value)
+})
 
 onMounted(() => {
   window.addEventListener('click', closeDropdown)
@@ -55,15 +62,12 @@ onBeforeUnmount(() => {
   window.addEventListener('focusin', closeDropdown)
 })
 
-// TODO: Remove all selected options
-// TODO: Dont show selected books in the dropdown options
-
 </script>
 
 <template>
-  <div ref="multiSelect" class="z-10">
-    <div class="absolute bg-white px-2 min-w-80 w-max rounded-sm">
-      <div class="flex gap-2">
+  <div ref="multiSelect">
+    <div class="bg-white px-2 min-w-80 rounded-sm flex gap-2 justify-between">
+      <div class="flex flex-wrap gap-2">
         <div v-for="selectedOption in selectedOptions"
              :key="selectedOption.id"
              class="bg-gray-200 pl-2 my-1 flex gap-2 items-center justify-between rounded-sm"
@@ -75,7 +79,15 @@ onBeforeUnmount(() => {
         </div>
         <input v-model="inputValue" class="border-0 focus:outline-none" @focus.prevent="showDropdown = true"/>
       </div>
+      <div class="flex" @click="showDropdown=!showDropdown">
+        <DropdownIcon/>
+        <div class="text-md text-gray-500 px-2 cursor-pointer hover:bg-gray-300 hover:text-gray-600"
+             @click="removeAll">x
+        </div>
+      </div>
+    </div>
 
+    <div class="absolute bg-gray-50 px-2">
       <div v-for="option in filteredOptions"
            :key="option.id"
            :class="showDropdown? 'block' : 'hidden'"
